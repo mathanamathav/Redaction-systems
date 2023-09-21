@@ -1,5 +1,6 @@
 # app.py
 from flask import Flask, request, jsonify
+from utils import redaction_code
 import requests
 
 API_ENDPOINT = "http://127.0.0.1:8500/ner_text_labelling"
@@ -24,8 +25,10 @@ def process_text():
             result_text = response.json()
             # todo Do the machine learning part and set the values
 
-            modified_text = result_text.get("text" , "")        
-            mappings = result_text.get("labelling" , "")
+            text = result_text.get("text" , "")        
+            labels = result_text.get("labelling" , "")
+
+            modified_text , mappings = redaction_code(text,labels)
 
             response_data = {
                 'data': modified_text,
