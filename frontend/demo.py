@@ -5,7 +5,7 @@ import requests
 st.set_page_config(page_title="Redaction", page_icon="🔒", layout="wide")
 
 # Running it in local server
-API_ENDPOINT = "http://127.0.0.1:5000/process_text"
+API_ENDPOINT = "http://127.0.0.1:8000/process_text"
 
 # Streamlit layout styling
 st.markdown(

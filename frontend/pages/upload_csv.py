@@ -3,8 +3,7 @@ import pandas as pd
 import io
 import requests
 
-# Set the page title
-st.set_page_config(page_title="CSV Redaction", page_icon="🔒")
+st.set_page_config(page_title="CSV Redaction", page_icon="🔒" , layout="wide")
 
 # Define the API endpoint
 API_ENDPOINT = ""
