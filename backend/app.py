@@ -4,8 +4,6 @@ from utils import redaction_code, ner_text_labelling
 import threading
 import queue
 
-import requests
-
 app = Flask(__name__)
 
 response_queue = queue.Queue()
@@ -22,10 +20,10 @@ def process_request(request_data):
     )
 
     response = {
-            "data": modified_text,
-            "mappings": mappings,
-            "read_data": modified_text_read,
-            "read_mappings": mappings_read,
+        "data": modified_text,
+        "mappings": mappings,
+        "read_data": modified_text_read,
+        "read_mappings": mappings_read,
     }
     response_queue.put(response)
 
@@ -35,7 +33,6 @@ def hello_world():
     return "Hello, World!"
 
 
-# todo simple text api input
 @app.route("/process_text", methods=["POST"])
 def process_text():
     input_data = request.json.get("text_input", "")
@@ -61,7 +58,6 @@ def process_text():
         return jsonify({"error": "Invalid input format"}), 400
 
 
-# todo batch text inputs
 @app.route("/batch_text", methods=["POST"])
 def batch_text():
     input_data = request.json.get("text_input", "")
@@ -77,7 +73,7 @@ def batch_text():
     for thread in threads:
         thread.join()
 
-    modified_text, mappings, modified_text_read, mappings_read  = [] , [] , [] , []
+    modified_text, mappings, modified_text_read, mappings_read = [], [], [], []
     while not response_queue.empty():
         response = response_queue.get()
 
@@ -86,12 +82,14 @@ def batch_text():
         modified_text_read.append(response.get("read_data"))
         mappings_read.append(response.get("read_mappings"))
 
-    return jsonify({
+    return jsonify(
+        {
             "data": modified_text,
             "mappings": mappings,
             "read_data": modified_text_read,
             "read_mappings": mappings_read,
-    })
+        }
+    )
 
 
 if __name__ == "__main__":

@@ -27,13 +27,12 @@ st.markdown(
 st.title("Redaction Text Demo")
 
 text_input = st.text_area("Enter your text:")
-agree = st.checkbox('Readability')
+agree = st.checkbox("Readability")
 
 if st.button("Run"):
     if text_input:
         try:
-            response = requests.post(
-                API_ENDPOINT, json={"text_input": text_input})
+            response = requests.post(API_ENDPOINT, json={"text_input": text_input})
             if response.status_code == 200:
                 result_text = response.json()
                 st.text_area("Output", result_text.get("data", ""))
