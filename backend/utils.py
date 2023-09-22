@@ -1,5 +1,7 @@
 from presidio_analyzer import AnalyzerEngine
 from presidio_analyzer.nlp_engine import NlpEngineProvider
+from faker import Faker
+fake = Faker()
 
 configuration = {
     "nlp_engine_name": "spacy",
@@ -41,6 +43,7 @@ def redaction_code(sentence, entities_info):
         else:
             temp_dic[entity] = entity_type
 
+
     for val in count_map:
         if count_map[val] > 1:
             count = 1
@@ -49,7 +52,40 @@ def redaction_code(sentence, entities_info):
                     temp_dic[key] = val + str(count)
                     count += 1
 
+
+    dict2 = {}
+    for key, value in temp_dic.items():
+        if value.startswith('PERSON'):
+            updated_val = fake.name()
+        elif value.startswith('EMAIL_ADDRESS'):
+            updated_val = fake.email()
+        elif value.startswith('URL'):
+            updated_val = fake.url()
+        elif value.startswith('IP_ADDRESS'):
+            updated_val = fake.ipv4_private()
+        # elif value.startswith('DATE_TIME'):
+        #     updated_val = fake.date_time()
+        elif value.startswith('CREDIT_CARD'):
+            updated_val = fake.credit_card_number()
+        elif value.startswith('PHONE_NUMBER'):
+            updated_val = fake.phone_number()
+        elif value.startswith('US_PASSPORT'):
+            updated_val = fake.passport_number()
+        elif value.startswith('US_SSN'):
+            updated_val = fake.ssn()  
+        else:
+            updated_val = value
+        
+        dict2[key] = updated_val
+
+    sentence_read = sentence
+
     for vals in temp_dic:
         sentence = sentence.replace(vals, temp_dic[vals])
 
-    return sentence , temp_dic
+    for vals in dict2:
+        sentence_read = sentence_read.replace(vals, dict2[vals])
+
+
+    return sentence, temp_dic, sentence_read, dict2
+

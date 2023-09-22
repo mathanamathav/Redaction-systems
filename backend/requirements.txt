@@ -1,3 +1,5 @@
 Flask==2.0.0
 spacy==3.6.1
+Faker==19.6.2
 # presidio-analyzer==2.2.33
+
