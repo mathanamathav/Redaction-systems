@@ -6,7 +6,8 @@ import requests
 st.set_page_config(page_title="CSV Redaction", page_icon="🔒" , layout="wide")
 
 # Define the API endpoint
-API_ENDPOINT = ""
+API_ENDPOINT = "http://127.0.0.1:8000/batch_text"
+CHUNCK_SIZE = 50
 
 # Streamlit layout styling
 st.markdown(
@@ -32,23 +33,35 @@ st.title("Redaction CSV")
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
 if uploaded_file is not None:
-    # Read the uploaded CSV file
-    df = pd.read_csv(uploaded_file)
+    df = pd.read_csv(uploaded_file , header=None , names = ["Text"])
+    df.reset_index(inplace=True,drop=True)
 
-    # Display the original data
     st.write("Original CSV data:")
-    st.write(df)
+    st.dataframe(df , use_container_width=True)
 
-    # Modify the CSV data (example: add 1 to all values)
-    df["simple"] = 1
-    modified_df = df
+    input = df["Text"].to_list()
 
-    # Display the modified data
+    modified_texts , mappings = [] , []
+
+    for i in range(0 , len(input) , CHUNCK_SIZE):
+
+        data = input[i:i+CHUNCK_SIZE]
+        response = requests.post(
+                API_ENDPOINT, json={"text_input": data})
+        
+        if response.status_code == 200:
+            result_text = response.json().get("responses")
+
+            modified_data = result_text
+            modified_texts.extend(modified_data)
+
+    df["Modified Text"] = modified_texts
+
     st.write("Modified CSV data:")
-    st.write(modified_df)
+    st.dataframe(df , use_container_width=True)
 
     # Download the modified CSV file
-    csv_file = modified_df.to_csv(index=False).encode()
+    csv_file = df.to_csv(index=False).encode()
     st.download_button(
         label="Download Modified CSV",
         data=csv_file,
