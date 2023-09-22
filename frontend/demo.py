@@ -27,6 +27,7 @@ st.markdown(
 st.title("Redaction Text Demo")
 
 text_input = st.text_area("Enter your text:")
+agree = st.checkbox('Readability')
 
 if st.button("Run"):
     if text_input:
@@ -37,6 +38,10 @@ if st.button("Run"):
                 result_text = response.json()
                 st.text_area("Output", result_text.get("data", ""))
                 st.json(result_text.get("mappings", {}))
+
+                if agree:
+                    st.text_area("Readable Output", result_text.get("read_data", ""))
+                    st.json(result_text.get("read_mappings", {}))
             else:
                 st.error("An error occurred. Please try again later.")
         except Exception as e:

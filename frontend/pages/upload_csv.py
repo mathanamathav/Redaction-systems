@@ -7,7 +7,7 @@ st.set_page_config(page_title="CSV Redaction", page_icon="🔒" , layout="wide")
 
 # Define the API endpoint
 API_ENDPOINT = "http://127.0.0.1:8000/batch_text"
-CHUNCK_SIZE = 50
+CHUNCK_SIZE = 100
 
 # Streamlit layout styling
 st.markdown(
@@ -41,7 +41,7 @@ if uploaded_file is not None:
 
     input = df["Text"].to_list()
 
-    modified_texts , mappings = [] , []
+    modified_text, mappings, modified_text_read, mappings_read  = [] , [] , [] , [] 
 
     for i in range(0 , len(input) , CHUNCK_SIZE):
 
@@ -50,12 +50,17 @@ if uploaded_file is not None:
                 API_ENDPOINT, json={"text_input": data})
         
         if response.status_code == 200:
-            result_text = response.json().get("responses")
-
-            modified_data = result_text
-            modified_texts.extend(modified_data)
-
-    df["Modified Text"] = modified_texts
+            response = response.json()
+            print( response )
+            modified_text.extend(response.get("data"))
+            mappings.extend(response.get("mappings"))
+            modified_text_read.extend(response.get("read_data"))
+            mappings_read.extend(response.get("read_mappings"))
+    
+    df["Modified Text"] = modified_text
+    df["Mapping"] = mappings
+    df["Modified Text Readability"] = modified_text_read
+    df["Mapping Readability"] = mappings_read
 
     st.write("Modified CSV data:")
     st.dataframe(df , use_container_width=True)
