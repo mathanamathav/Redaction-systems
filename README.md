@@ -19,6 +19,9 @@ Here's an overview of how such an application could be built using Streamlit and
 4. Visualization: The redacted document or text is displayed to the user through a Streamlit interface, allowing them to review and download the redacted content.
 
 5. Download: Users can download the redacted document or text for further use
+
+### Drive link - https://drive.google.com/drive/folders/1EC5PZpcisQZbnBlj7c86ZDNU91Tnymln?usp=sharing
+### PPT link - https://www.canva.com/design/DAFvINTqquM/-Pv6dLrRI1uNlpIBmxE7jA/view?utm_content=DAFvINTqquM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink
     
 ## Project Preview:
 ![image](https://github.com/mathanamathav/Redaction-systems/assets/62739618/72674d16-a6f5-4383-8929-e539dc2abc1b)
