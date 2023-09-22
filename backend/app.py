@@ -91,6 +91,38 @@ def batch_text():
         }
     )
 
+@app.route("/batch_text_not_optimized", methods=["POST"])
+def batch_text_not_optimized():
+    input_data = request.json.get("text_input", "")
+    if not input_data:
+        return jsonify({"error": "Invalid input format"}), 400
+    
+    modified_texts, mappings, modified_text_reads, mappings_reads = [], [], [], []
+
+    for data in input_data:
+        response = ner_text_labelling({"text": data})
+
+        text = response.get("text", "")
+        labels = response.get("labelling", "")
+
+        modified_text, mapping, modified_text_read, mappings_read = redaction_code(
+            text, labels
+        )
+
+        modified_texts.append(modified_text)
+        mappings.append(mapping)
+        modified_text_reads.append(modified_text_read)
+        mappings_reads.append(mappings_read)
+
+    return jsonify(
+        {
+            "data": modified_texts,
+            "mappings": mappings,
+            "read_data": modified_text_reads,
+            "read_mappings": mappings_reads,
+        }
+    )
+
 
 if __name__ == "__main__":
     app.run(port=8000, debug=True)

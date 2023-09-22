@@ -25,12 +25,12 @@ def ner_text_labelling(data):
 
 def redaction_code(sentence, entities_info):
 
-    c = 0
-    for i in entities_info:
-        if i['entity_type']=='DATE_TIME':
-            c+=1
-    if c==1:
-        return [] , [] , [] , [] #no redaction part
+    # c = 0
+    # for i in entities_info:
+    #     if i['entity_type']=='DATE_TIME':
+    #         c+=1
+    # if c==1:
+    #     return [] , [] , [] , [] #no redaction part
     
     count_map = {}
 
